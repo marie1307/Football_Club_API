@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
     'drf_yasg',
     'corsheaders',
     'teams',
@@ -124,6 +123,8 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ),
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'teams.permissions.IsOwnerOrReadOnly'

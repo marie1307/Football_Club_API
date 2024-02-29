@@ -34,7 +34,7 @@ class PersonalInfoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         print(user)
-        return PersonalInfo.objects.filter(id=user)
+        return PersonalInfo.objects.filter(user=user)
 
 
 class LoginAPIView(APIView):
@@ -65,5 +65,5 @@ class LogoutAPIView(APIView):
         except Token.DoesNotExist:
             return Response({'error': 'No token found for the user'}, status=status.HTTP_400_BAD_REQUEST)
         
-        token.delete()
+        # token.delete()
         return Response({'message': 'User logged out successfully'}, status=status.HTTP_200_OK)

@@ -123,7 +123,7 @@ class SkillStatistics(models.Model):
     
 
 class PersonalInfo(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE)  # ????
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # ????
     first_name = models.CharField(verbose_name="სახელი", max_length=50) 
     last_name = models.CharField(verbose_name="გვარი", max_length=50)
     birth_date = models.DateField(verbose_name="დაბადების თარიღი")
