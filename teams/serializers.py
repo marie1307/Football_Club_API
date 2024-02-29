@@ -25,7 +25,7 @@ class PersonalInfoSerializer(serializers.ModelSerializer):
         model = PersonalInfo
         fields = "__all__"
 
-    
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()

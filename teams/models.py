@@ -1,8 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
-
-
 class AboutPage(models.Model):
     logo = models.ImageField(upload_to='images/')
     title = models.CharField(max_length=50)
@@ -53,7 +52,7 @@ class Schedules(models.Model):
         ('Sun', 'Sunday'),
     ]
     week_day = models.CharField(choices=WEEKDAY_CHOICES, max_length=20)
-    hour = models.TimeField()
+    hour = models.CharField(max_length=5)
 
 
 # ვიდეოების მოდელი
@@ -65,8 +64,6 @@ class Videos(models.Model):
         return self.title
 
 # ფოტოების მოდელი
-
-
 class Images(models.Model):
     image = models.ImageField(upload_to='images/')
     title = models.CharField(max_length=50)
@@ -75,11 +72,8 @@ class Images(models.Model):
         return self.title
 
 # ერთიანი ცხრილი ასაკობრივი ჯგუფების მიხედვით
-
-
 class Groups(models.Model):
     age_group = models.ForeignKey(AgeCroups, on_delete=models.CASCADE)
-    # აქ video და image საერთოდ ცალკე ვიდეოების დამატება ხომ არ ჯობია 5-ჯერ და ფოტოების 20-ჯერ?
     video = models.ForeignKey(Videos, on_delete=models.CASCADE)
     image = models.ForeignKey(Images, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedules, on_delete=models.CASCADE)
@@ -90,23 +84,59 @@ class Groups(models.Model):
 
 # ფეხბურთელის პირადი გვერდი
 
-class Skill_statistics(models.Model):
-    pass
-
+class SkillStatistics(models.Model):
+    speed_10 = models.CharField(verbose_name="სისწრაფე(10 მ.)", max_length=50)
+    speed_20 = models.CharField(verbose_name="სისწრაფე(20 მ.)", max_length=50)
+    speed_30 = models.CharField(verbose_name="სისწრაფე(30 მ.)", max_length=50)
+    speed_50 = models.CharField(verbose_name="სისწრაფე(50 მ.)", max_length=50)
+    speed_100 = models.CharField(verbose_name="სისწრაფე(100 მ.)", max_length=50)
+    penal_left = models.CharField(verbose_name="პენალტი (მარჯვ.)", max_length=50)
+    penal_right = models.CharField(verbose_name="პენალტი (მარცხ.)", max_length=50)
+    kick_centre_right = models.CharField(verbose_name="დარტყმა( 16.5 მ (ცენტრი)) (ფეხი მარჯ.)", max_length=50)
+    kick_centre_left = models.CharField(verbose_name="დარტყმა( 16.5 მ (ცენტრი)) (ფეხი მარცხ.)", max_length=50)
+    kick_right_angle_foot_right = models.CharField(
+        verbose_name="დარტყმა( 16.5 მ (რკალი მარცხენა)) (ფეხი მარჯ.)", max_length=50)
+    kick_right_angle_foot_left = models.CharField(
+        verbose_name="დარტყმა( 16.5 მ (რკალი მარცხენა)) (ფეხი მარცხ.)", max_length=50)
+    kick_left_angle_foot_right_circl = models.CharField(
+        verbose_name="დარტყმა( 16.5 მ (რკალი მარჯვენა)) (ფეხი მარჯ.)", max_length=50)
+    kick_left_angle_foot_left_circl = models.CharField(
+        verbose_name=" დარტყმა( 16.5 მ (რკალი მარჯვენა)) (ფეხი მარცხ.)", max_length=50)
+    kick_right = models.CharField(
+        verbose_name="ჟონგლირება (ფეხი მარჯ.)", max_length=50)
+    kick_left = models.CharField(
+        verbose_name="ჟონგლირება (ფეხი მარცხ.)", max_length=50)
+    kick_head = models.CharField(verbose_name="ჟონგლირება (თავი)", max_length=50)
+    kick_knee_right = models.CharField(
+        verbose_name="ჟონგლირება (მუხლი მარჯვ.)", max_length=50)
+    kick_knee_left = models.CharField(
+        verbose_name="ჟონგლირება (მუხლი მარცხ.)", max_length=50)
+    jogging = models.CharField(verbose_name="ძუნძული (100 მ.)", max_length=50)
+    pass_right = models.CharField(
+        verbose_name="ბალანსი, პასი (მარჯვ. შიდა ტერფი)", max_length=50)
+    pass_left = models.CharField(
+        verbose_name="ბალანსი, პასი (მარცხ. შიდა ტერფი)", max_length=50)
+    pass_left_upper = models.CharField(
+        verbose_name="ბალანსი, პასი (მარჯვ. ზედა ტერფი)", max_length=50)
+    pass_right_upper = models.CharField(
+        verbose_name="ბალანსი, პასი (მარცხ. ზედა ტერფი)", max_length=50)
+    
 
 class PersonalInfo(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    birth_date = models.DateField()
+    username = models.ForeignKey(User, on_delete=models.CASCADE)  # ????
+    first_name = models.CharField(verbose_name="სახელი", max_length=50) 
+    last_name = models.CharField(verbose_name="გვარი", max_length=50)
+    birth_date = models.DateField(verbose_name="დაბადების თარიღი")
     personal_image = models.ImageField(upload_to='images/')
     cover_image = models.ImageField(upload_to='images/')
-    height = models.FloatField()  # ასე დარჩეს თუ მთელი რიცხვი იყოს?
-    weight = models.FloatField()  # იგივე
+    # ასე დარჩეს თუ მთელი რიცხვი იყოს?
+    height = models.FloatField(verbose_name="სიმაღლე",)
+    weight = models.FloatField(verbose_name="წონა",)  # იგივე
     FOOT_CHOICES = [
         ('R', 'მარჯვენა'),
         ('L', 'მარცხენა'),
     ]
-    foot = models.CharField(choices=FOOT_CHOICES, max_length=20)
+    foot = models.CharField(choices=FOOT_CHOICES, verbose_name="ფეხი", max_length=20)
     POSITION_CHOICES = [
         ('GK', 'Goalkeeper'),
         ('D', 'Defender'),
@@ -135,6 +165,5 @@ class PersonalInfo(models.Model):
         ('CF', 'Centre Forward'),
         ('ST', 'Striker'),
     ]
-    position = models.CharField(choices=POSITION_CHOICES, max_length=50)
-    skill_statistic = models.ForeignKey(
-        Skill_statistics, on_delete=models.CASCADE)
+    position = models.CharField(choices=POSITION_CHOICES, verbose_name="პოზიცია", max_length=50)
+    skill_statistic = models.ForeignKey(SkillStatistics, on_delete=models.CASCADE)

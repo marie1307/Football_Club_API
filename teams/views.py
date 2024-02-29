@@ -4,10 +4,12 @@ from .models import AboutPage, Contact, Groups, PersonalInfo
 from .serializers import AboutPageSerializer, ContactSerializer, GroupsSerializer, PersonalInfoSerializer, LoginSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from .permissions import OwnProfilePermission
 
-# Create your views here.
+
 class AboutPageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AboutPage.objects.all()
     serializer_class = AboutPageSerializer
@@ -23,26 +25,45 @@ class GroupsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupsSerializer
 
 
-class PersonalInfoViewSet(viewsets.ReadOnlyModelViewSet):
+class PersonalInfoViewSet(viewsets.ModelViewSet):
     queryset = PersonalInfo.objects.all()
     serializer_class = PersonalInfoSerializer
-    permission_classes = [IsAuthenticated]
+
+    # permission_classes = [IsAuthenticated, OwnProfilePermission]
+
+    def get_queryset(self):
+        user = self.request.user
+        print(user)
+        return PersonalInfo.objects.filter(id=user)
 
 
-# დალოგინების ფუნქციონალი / აბრუნებს ტოკენს ან წერს რომ მომხმარებელი რეგისტრირებული არ არის
 class LoginAPIView(APIView):
-    serializer_class = LoginSerializer
-    permission_classes =[AllowAny]
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+    permission_classes=[AllowAny]
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
-            try:
-                user = User.objects.get(username=username, password=password)
+
+            user = authenticate(username=username, password=password)
+            if user is not None:
                 token, created = Token.objects.get_or_create(user=user)
                 return Response({'token': token.key})
-            except User.DoesNotExist:
-                return Response({'error': "მომხმარებელი რეგისტრირებული არ არის"}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class LogoutAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+        except Token.DoesNotExist:
+            return Response({'error': 'No token found for the user'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        token.delete()
+        return Response({'message': 'User logged out successfully'}, status=status.HTTP_200_OK)
