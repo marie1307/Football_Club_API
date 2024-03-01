@@ -28,8 +28,7 @@ class GroupsViewSet(viewsets.ReadOnlyModelViewSet):
 class PersonalInfoViewSet(viewsets.ModelViewSet):
     queryset = PersonalInfo.objects.all()
     serializer_class = PersonalInfoSerializer
-
-    # permission_classes = [IsAuthenticated, OwnProfilePermission]
+    permission_classes = [IsAuthenticated, OwnProfilePermission]
 
     def get_queryset(self):
         user = self.request.user
