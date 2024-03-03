@@ -28,8 +28,7 @@ class GroupsViewSet(viewsets.ReadOnlyModelViewSet):
 class PersonalInfoViewSet(viewsets.ModelViewSet):
     queryset = PersonalInfo.objects.all()
     serializer_class = PersonalInfoSerializer
-
-    # permission_classes = [IsAuthenticated, OwnProfilePermission]
+    permission_classes = [IsAuthenticated, OwnProfilePermission]
 
     def get_queryset(self):
         user = self.request.user
@@ -65,5 +64,5 @@ class LogoutAPIView(APIView):
         except Token.DoesNotExist:
             return Response({'error': 'No token found for the user'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # token.delete()
+        token.delete()
         return Response({'message': 'User logged out successfully'}, status=status.HTTP_200_OK)

@@ -83,8 +83,23 @@ class Groups(models.Model):
 
 
 # ფეხბურთელის პირადი გვერდი
-
 class SkillStatistics(models.Model):
+    year = models.IntegerField(blank=True, verbose_name="წელი")
+    MONTH_CHOICES = [
+        ('Jan', 'იანვარი'),
+        ('Feb', 'თებერვალი'),
+        ('Mar', 'მარტი'),
+        ('Apr', 'აპრილი'),
+        ('May', 'მაისი'),
+        ('Jun', 'ივნისი'),
+        ('Jul', 'ივლისი'),
+        ('Aug', 'აგვისტო'),
+        ('Sep', 'სექტემბერი'),
+        ('Oct', 'ოქტომბერი'),
+        ('Nov', 'ნოემბერი'),
+        ('Dec', 'დეკემბერი'),
+    ]
+    month = models.CharField(choices=MONTH_CHOICES, blank=True, max_length=20)
     speed_10 = models.CharField(verbose_name="სისწრაფე(10 მ.)", max_length=50)
     speed_20 = models.CharField(verbose_name="სისწრაფე(20 მ.)", max_length=50)
     speed_30 = models.CharField(verbose_name="სისწრაფე(30 მ.)", max_length=50)
@@ -123,15 +138,15 @@ class SkillStatistics(models.Model):
     
 
 class PersonalInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # ????
+    user = models.OneToOneField(User, on_delete=models.CASCADE) 
     first_name = models.CharField(verbose_name="სახელი", max_length=50) 
     last_name = models.CharField(verbose_name="გვარი", max_length=50)
     birth_date = models.DateField(verbose_name="დაბადების თარიღი")
     personal_image = models.ImageField(upload_to='images/')
     cover_image = models.ImageField(upload_to='images/')
     # ასე დარჩეს თუ მთელი რიცხვი იყოს?
-    height = models.FloatField(verbose_name="სიმაღლე",)
-    weight = models.FloatField(verbose_name="წონა",)  # იგივე
+    height = models.FloatField(verbose_name="სიმაღლე")
+    weight = models.FloatField(verbose_name="წონა")
     FOOT_CHOICES = [
         ('R', 'მარჯვენა'),
         ('L', 'მარცხენა'),
