@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import AboutPage, Contact, Groups, PersonalInfo
-from .serializers import AboutPageSerializer, ContactSerializer, GroupsSerializer, PersonalInfoSerializer, LoginSerializer
+from .serializers import GroupsSerializer, PersonalInfoSerializer, LoginSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
@@ -10,14 +10,14 @@ from django.contrib.auth import authenticate
 from .permissions import OwnProfilePermission
 
 
-class AboutPageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = AboutPage.objects.all()
-    serializer_class = AboutPageSerializer
+# class AboutPageViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = AboutPage.objects.all()
+#     serializer_class = AboutPageSerializer
 
 
-class ContactViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Contact.objects.all()
-    serializer_class = ContactSerializer
+# class ContactViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = Contact.objects.all()
+#     serializer_class = ContactSerializer
 
 
 class GroupsViewSet(viewsets.ReadOnlyModelViewSet):
